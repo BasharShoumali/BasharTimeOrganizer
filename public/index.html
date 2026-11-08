@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Organizer" />
+  <title>My Organizer</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="organizer.css" />
+</head>
+<body>
+  <!-- SPLASH: loading → welcome -->
+  <div class="splash" id="splash">
+    <div class="splash-box">
+      <div class="splash-icon" id="splashIcon"><svg class="spin"><use href="#i-refresh"/></svg></div>
+      <h2 id="splashTitle">Getting things ready…</h2>
+      <p class="muted" id="splashSub">Loading your day</p>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login" id="login" hidden>
+    <form class="login-box" id="loginForm" autocomplete="on">
+      <img src="icon.svg" alt="" class="login-logo" />
+      <h1>Welcome back</h1>
+      <p class="muted">Your day, your shifts, your classes. Log in to continue.</p>
+      <label class="login-field">
+        <svg><use href="#i-user"/></svg>
+        <input type="text" id="username" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" required />
+      </label>
+      <label class="login-field">
+        <svg><use href="#i-lock"/></svg>
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+        <button type="button" class="eye" id="togglePw" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+      </label>
+      <p class="login-err" id="loginErr"></p>
+      <button class="btn primary big" type="submit" id="loginBtn">Log in</button>
+    </form>
+  </div>
+
+  <!-- HOME -->
+  <div class="app" id="app" hidden>
+    <header class="top">
+      <div class="who">
+        <div class="avatar" id="avatar">?</div>
+        <div class="who-text">
+          <p class="muted small" id="greetLine"></p>
+          <h1 id="userName"></h1>
+        </div>
+      </div>
+      <button class="icon-btn" id="menuBtn" aria-label="Menu"><svg><use href="#i-gear"/></svg></button>
+    </header>
+
+    <!-- NOW / NEXT -->
+    <section class="now-card" id="nowCard">
+      <div class="now-top">
+        <span class="now-pill" id="nowPill">Today</span>
+        <span class="muted small" id="nowMeta"></span>
+      </div>
+      <div class="now-title" id="nowTitle">Your day is free ✨</div>
+      <div class="now-sub" id="nowSub"></div>
+      <div class="day-bar" id="dayBar"></div>
+      <div class="day-bar-scale"><span>7</span><span>11</span><span>15</span><span>19</span><span>23</span></div>
+    </section>
+
+    <h2 class="section-title">What do you want to organize?</h2>
+    <section class="options">
+      <a class="opt opt-today" href="today.html">
+        <span class="opt-icon">📅</span>
+        <span class="opt-name">My Schedule</span>
+        <span class="opt-info" id="optToday">Plan your day</span>
+      </a>
+      <a class="opt opt-work" href="work.html">
+        <span class="opt-icon">💼</span>
+        <span class="opt-name">Work Hours</span>
+        <span class="opt-info" id="optWork">Shifts &amp; pay</span>
+      </a>
+      <a class="opt opt-college" href="college.html">
+        <span class="opt-icon">🎓</span>
+        <span class="opt-name">College</span>
+        <span class="opt-info" id="optCollege">Lectures &amp; exams</span>
+      </a>
+      <a class="opt opt-tasks" href="tasks.html">
+        <span class="opt-icon">✅</span>
+        <span class="opt-name">Tasks</span>
+        <span class="opt-info" id="optTasks">To-do list</span>
+      </a>
+    </section>
+
+    <section class="card" id="upCard">
+      <div class="card-head"><h2>Coming up</h2><span class="muted small">next 7 days</span></div>
+      <ul class="up-list" id="upList"></ul>
+      <p class="empty small" id="upEmpty">Nothing coming up. Enjoy the calm 🌤</p>
+    </section>
+
+    <p class="foot">Saved in your database · works on all your devices</p>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <nav class="bar" id="bar" hidden>
+    <a class="bar-btn" href="today.html"><svg><use href="#i-cal"/></svg><span>Schedule</span></a>
+    <button class="fab" id="quickAdd" aria-label="Quick add"><svg><use href="#i-plus"/></svg></button>
+    <a class="bar-btn" href="tasks.html"><svg><use href="#i-list"/></svg><span>Tasks</span></a>
+  </nav>
+
+  <!-- QUICK ADD -->
+  <dialog class="sheet" id="addSheet">
+    <div class="handle"></div>
+    <div class="sheet-head"><h2>What do you want to add?</h2><button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button></div>
+    <div class="add-grid">
+      <button class="add-opt" data-add="shift"><span>💼</span><b>Plan a shift</b><small>Upcoming work shift</small></button>
+      <a class="add-opt" href="work.html?add=1"><span>⏱</span><b>Log work day</b><small>Hours already worked</small></a>
+      <a class="add-opt" href="college.html?add=class"><span>🎓</span><b>Lecture</b><small>Weekly class</small></a>
+      <button class="add-opt" data-add="exam"><span>📝</span><b>Exam</b><small>Date &amp; time</small></button>
+      <button class="add-opt" data-add="task"><span>✅</span><b>Task</b><small>Homework, errands…</small></button>
+      <button class="add-opt" data-add="event"><span>📌</span><b>Event</b><small>Appointment, meeting</small></button>
+      <button class="add-opt" data-add="study"><span>📖</span><b>Study time</b><small>Block time to study</small></button>
+      <button class="add-opt" data-add="personal"><span>🌿</span><b>Personal</b><small>Gym, family, rest</small></button>
+    </div>
+  </dialog>
+
+  <!-- MENU -->
+  <dialog class="sheet" id="menuSheet">
+    <div class="handle"></div>
+    <div class="sheet-head"><h2>Menu</h2><button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button></div>
+    <div class="stack">
+      <div class="account">
+        <div class="avatar" id="mAvatar">?</div>
+        <div class="account-text"><div class="muted small">Logged in as</div><b id="mUser"></b></div>
+        <button class="btn ghost small" type="button" id="logoutBtn">Log out</button>
+      </div>
+      <a class="btn ghost" href="/api/export" download><svg><use href="#i-download"/></svg>Download full backup</a>
+      <a class="btn ghost" href="work.html?settings=1"><svg><use href="#i-gear"/></svg>Work settings (rate, currency, goal)</a>
+      <a class="btn ghost" href="college.html?semester=1"><svg><use href="#i-gear"/></svg>Semester dates</a>
+      <p class="muted small center">Tip: in your phone's browser menu, tap <b>Add to Home Screen</b> to open this like an app.</p>
+    </div>
+  </dialog>
+
+  <script src="core.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

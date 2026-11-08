@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Organizer" />
+  <title>Work Hours</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- SVG icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><path d="M20 20.5V16h-4.5"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V5a1.5 1.5 0 0 0-1.5-1.5H5A1.5 1.5 0 0 0 3.5 5v9A1.5 1.5 0 0 0 5 15.5h3.5"/></g></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+  </svg>
+
+  <!-- SPLASH: loading → welcome -->
+  <div class="splash" id="splash">
+    <div class="splash-box">
+      <div class="splash-icon" id="splashIcon"><svg class="spin"><use href="#i-refresh"/></svg></div>
+      <h2 id="splashTitle">Getting things ready…</h2>
+      <p class="muted" id="splashSub">Loading your shifts</p>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login" id="login" hidden>
+    <form class="login-box" id="loginForm" autocomplete="on">
+      <img src="icon.svg" alt="" class="login-logo" />
+      <h1>Welcome back</h1>
+      <p class="muted">Every shift counts. Log in to continue.</p>
+      <label class="login-field">
+        <svg><use href="#i-user"/></svg>
+        <input type="text" id="username" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" required />
+      </label>
+      <label class="login-field">
+        <svg><use href="#i-lock"/></svg>
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+        <button type="button" class="eye" id="togglePw" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+      </label>
+      <p class="login-err" id="loginErr"></p>
+      <button class="btn primary big" type="submit" id="loginBtn">Log in</button>
+    </form>
+  </div>
+
+  <!-- APP -->
+  <div class="app" id="app" hidden>
+    <header class="top">
+      <div class="who">
+        <a class="icon-btn home-btn" href="/" aria-label="Home"><svg><use href="#i-home"/></svg></a>
+        <div class="who-text">
+          <p class="muted small" id="greetLine"></p>
+          <h1 id="userName"></h1>
+        </div>
+      </div>
+      <button class="icon-btn" id="refreshBtn" aria-label="Refresh"><svg><use href="#i-refresh"/></svg></button>
+    </header>
+
+    <div class="import-banner" id="importBanner" hidden>
+      <span>Found <b id="importCount">0</b> days saved in this browser from before.</span>
+      <div class="row-gap">
+        <button class="btn ghost small" id="importSkip">Not now</button>
+        <button class="btn primary small" id="importGo">Move to database</button>
+      </div>
+    </div>
+
+    <!-- BONUS: counted alone, top of page -->
+    <section class="bonus">
+      <div class="bonus-shine"></div>
+      <div class="bonus-left">
+        <div class="bonus-label">🎁 Bonus this month</div>
+        <div class="bonus-value" id="bonusTotal">0</div>
+      </div>
+      <div class="bonus-right">
+        <div class="bonus-all-label">All time</div>
+        <div class="bonus-all" id="bonusAll">0</div>
+      </div>
+    </section>
+
+    <!-- LIVE SHIFT -->
+    <section class="shift" id="shiftCard">
+      <div class="shift-idle" id="shiftIdle">
+        <div>
+          <div class="shift-title">Ready to work?</div>
+          <div class="muted small">Start the timer when your shift begins</div>
+        </div>
+        <button class="btn start" id="startShift"><svg><use href="#i-play"/></svg>Start shift</button>
+      </div>
+      <div class="shift-live" id="shiftLive" hidden>
+        <div class="live-head">
+          <span class="live-pill"><span class="pulse"></span>On shift</span>
+          <span class="live-type" id="liveType">PAID</span>
+        </div>
+        <div class="live-time" id="liveTime">00:00:00</div>
+        <div class="live-sub"><span id="liveSince">since 08:00</span> · <b id="liveMoney">₪0</b> so far</div>
+        <div class="live-actions">
+          <button class="btn ghost small" id="discardShift">Discard</button>
+          <button class="btn stop" id="endShift"><svg><use href="#i-stop"/></svg>End shift</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOAL RING -->
+    <section class="goal">
+      <div class="month-nav">
+        <button class="icon-btn sm" id="prevMonth" aria-label="Previous month"><svg><use href="#i-left"/></svg></button>
+        <div class="month-name" id="monthName"></div>
+        <button class="icon-btn sm" id="nextMonth" aria-label="Next month"><svg><use href="#i-right"/></svg></button>
+      </div>
+      <div class="goal-body">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 120 120">
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8b7bff"/><stop offset="1" stop-color="#4fd1c5"/>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="52" class="ring-bg"/>
+            <circle cx="60" cy="60" r="52" class="ring-fg" id="ringFg"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-pct" id="ringPct">0%</div>
+            <div class="ring-of">of goal</div>
+          </div>
+        </div>
+        <div class="goal-info">
+          <div class="muted small">Earned this month</div>
+          <div class="goal-total" id="sumTotal">0</div>
+          <div class="goal-msg" id="goalMsg">Let's get started 💪</div>
+          <div class="muted small" id="goalLeft"></div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-v" id="sumHours">0</div><div class="stat-l">hours · <span id="sumDays">0 days</span></div></div>
+        <div class="stat out"><div class="stat-v" id="sumOut">0</div><div class="stat-l">PAID<small>paid today</small></div></div>
+        <div class="stat in"><div class="stat-v" id="sumIn">0</div><div class="stat-l">UNPAID<small>paid next month</small></div></div>
+      </div>
+    </section>
+
+    <!-- THIS WEEK -->
+    <section class="week">
+      <div class="week-head">
+        <h2>This week</h2>
+        <span class="muted small" id="weekHours">0 h</span>
+      </div>
+      <div class="week-strip" id="weekStrip"></div>
+    </section>
+
+    <!-- LAST SHIFT -->
+    <section class="last" id="lastCard" hidden>
+      <div class="muted small">Last saved shift</div>
+      <div class="last-row" id="lastRow"></div>
+    </section>
+
+    <p class="foot">Saved in your database · works on all your devices</p>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <nav class="bar" id="bar" hidden>
+    <button class="bar-btn" id="openDays"><svg><use href="#i-list"/></svg><span>Details</span></button>
+    <button class="fab" id="openAdd" aria-label="Add a day"><svg><use href="#i-plus"/></svg></button>
+    <button class="bar-btn" id="openSettings"><svg><use href="#i-gear"/></svg><span>Settings</span></button>
+  </nav>
+
+  <!-- ADD / EDIT SHEET -->
+  <dialog class="sheet" id="addSheet">
+    <div class="handle"></div>
+    <div class="sheet-head">
+      <h2 id="formTitle">Add a work day</h2>
+      <button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <form id="entryForm" autocomplete="off">
+      <div class="type-toggle">
+        <label class="type-opt">
+          <input type="radio" name="type" value="out" checked />
+          <span><b>PAID</b><small>paid at end of day</small></span>
+        </label>
+        <label class="type-opt">
+          <input type="radio" name="type" value="in" />
+          <span><b>UNPAID</b><small>paid next month</small></span>
+        </label>
+      </div>
+
+      <button type="button" class="copy-last" id="copyLast" hidden>
+        <svg><use href="#i-copy"/></svg><span>Same as last shift <b id="copyLastInfo"></b></span>
+      </button>
+
+      <div class="field">
+        <span>Date</span>
+        <div class="quick" id="dateChips">
+          <button type="button" class="q" data-day="0">Today</button>
+          <button type="button" class="q" data-day="1">Yesterday</button>
+          <input type="date" id="date" required aria-label="Date" />
+        </div>
+      </div>
+      <div class="two">
+        <label class="field">
+          <span>Start</span>
+          <div class="with-btn"><input type="time" id="start" required /><button type="button" class="mini" data-now="start">Now</button></div>
+        </label>
+        <label class="field">
+          <span>End</span>
+          <div class="with-btn"><input type="time" id="end" required /><button type="button" class="mini" data-now="end">Now</button></div>
+        </label>
+      </div>
+      <div class="field">
+        <span>Break</span>
+        <div class="quick" id="breakChips">
+          <button type="button" class="q" data-break="0">None</button>
+          <button type="button" class="q" data-break="15">15m</button>
+          <button type="button" class="q" data-break="30">30m</button>
+          <button type="button" class="q" data-break="45">45m</button>
+          <button type="button" class="q" data-break="60">1h</button>
+          <input type="number" id="breakMin" min="0" step="5" value="0" inputmode="numeric" aria-label="Break minutes" />
+        </div>
+      </div>
+      <div class="two">
+        <label class="field">
+          <span>Hourly rate</span>
+          <input type="number" id="rate" min="0" step="0.01" required inputmode="decimal" />
+        </label>
+        <label class="field bonus-field">
+          <span>🎁 Bonus</span>
+          <input type="number" id="bonus" min="0" step="0.01" placeholder="0" inputmode="decimal" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Note (optional)</span>
+        <input type="text" id="note" placeholder="e.g. event, overtime…" maxlength="300" />
+      </label>
+
+      <div class="preview" id="preview">
+        <div><b id="pvHours">0 h</b><span>worked</span></div>
+        <div><b id="pvPay">0</b><span id="pvWhen">paid today</span></div>
+        <div class="pv-bonus" id="pvBonusBox" hidden><b id="pvBonus">0</b><span>bonus</span></div>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="button" class="btn danger" id="deleteEntry" hidden><svg><use href="#i-trash"/></svg><span>Delete</span></button>
+        <button type="submit" class="btn primary big grow" id="saveBtn">Save day</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- DAYS / DETAILS SHEET -->
+  <dialog class="sheet tall" id="daysSheet">
+    <div class="handle"></div>
+    <div class="sheet-head">
+      <div class="month-nav compact">
+        <button class="icon-btn sm" id="dPrev" aria-label="Previous month"><svg><use href="#i-left"/></svg></button>
+        <h2 id="dMonth"></h2>
+        <button class="icon-btn sm" id="dNext" aria-label="Next month"><svg><use href="#i-right"/></svg></button>
+      </div>
+      <button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="d-summary" id="dSummary"></div>
+    <div class="filters">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="out">PAID</button>
+      <button class="chip" data-filter="in">UNPAID</button>
+      <button class="chip" data-filter="bonus">🎁 Bonus</button>
+    </div>
+    <p class="hint muted small" id="listHint">Tap any day to edit or delete it</p>
+    <ul class="list" id="list"></ul>
+    <p class="empty" id="empty">No days saved for this month yet.</p>
+    <div class="tools">
+      <button class="btn ghost small" id="exportCsv">Export CSV</button>
+      <button class="btn ghost small" id="backupBtn">Backup</button>
+      <label class="btn ghost small">Restore<input type="file" id="restoreFile" accept=".json" hidden /></label>
+    </div>
+  </dialog>
+
+  <!-- SETTINGS SHEET -->
+  <dialog class="sheet" id="settingsSheet">
+    <div class="handle"></div>
+    <div class="sheet-head">
+      <h2>Settings</h2>
+      <button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <form id="settingsForm">
+      <div class="account">
+        <div class="avatar" id="sAvatar">?</div>
+        <div class="account-text"><div class="muted small">Logged in as</div><b id="sUser"></b></div>
+        <button class="btn ghost small" type="button" id="logoutBtn">Log out</button>
+      </div>
+      <div class="two">
+        <label class="field"><span>Default hourly rate</span><input type="number" id="sRate" min="0" step="0.01" inputmode="decimal" /></label>
+        <label class="field"><span>Currency</span><input type="text" id="sCurrency" maxlength="4" /></label>
+      </div>
+      <label class="field"><span>Monthly goal (pay + bonus)</span><input type="number" id="sGoal" min="0" step="50" inputmode="numeric" /></label>
+      <button class="btn primary big" type="submit">Save settings</button>
+      <button class="btn danger" type="button" id="clearAll"><svg><use href="#i-trash"/></svg>Delete all data</button>
+      <p class="muted small center">Tip: in your phone's browser menu, tap <b>Add to Home Screen</b> to open this like an app.</p>
+    </form>
+  </dialog>
+
+  <!-- CONFIRM POPUP -->
+  <dialog class="confirm" id="confirmDlg">
+    <div class="confirm-icon" id="confirmIcon"><svg><use href="#i-trash"/></svg></div>
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p class="muted" id="confirmText"></p>
+    <div class="confirm-actions">
+      <button class="btn ghost" id="confirmNo">Cancel</button>
+      <button class="btn danger solid" id="confirmYes">Delete</button>
+    </div>
+  </dialog>
+
+  <canvas id="confetti"></canvas>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

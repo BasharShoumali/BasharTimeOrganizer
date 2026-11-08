@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>College</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="organizer.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="page-top">
+      <a class="icon-btn" href="/" aria-label="Home"><svg><use href="#i-home"/></svg></a>
+      <div class="page-title">
+        <h1>College</h1>
+        <p class="muted small" id="semLabel">Your weekly timetable</p>
+      </div>
+      <button class="icon-btn" id="semBtn" aria-label="Semester dates"><svg><use href="#i-gear"/></svg></button>
+    </header>
+
+    <div class="seg" id="tabs">
+      <button class="on" data-tab="timetable">🗓 Timetable</button>
+      <button data-tab="exams">📝 Exams &amp; homework</button>
+    </div>
+
+    <!-- TIMETABLE -->
+    <section id="tabTimetable" class="stack">
+      <div class="sum-chips" id="ttChips"></div>
+      <div id="ttDays" class="stack"></div>
+      <div class="empty-day" id="ttEmpty" hidden>
+        <div class="empty-emoji">🎓</div>
+        <b>Add your weekly timetable</b>
+        <p class="muted small">Add each lecture once. It shows up every week in your schedule.</p>
+        <button class="btn primary" id="ttFirst"><svg><use href="#i-plus"/></svg>Add a lecture</button>
+      </div>
+    </section>
+
+    <!-- EXAMS & HOMEWORK -->
+    <section id="tabExams" class="stack" hidden>
+      <section class="card">
+        <div class="card-head"><h2>📝 Exams</h2><button class="btn ghost small" id="addExam"><svg><use href="#i-plus"/></svg>Exam</button></div>
+        <ul class="exam-list" id="examList"></ul>
+        <p class="empty small" id="examEmpty">No exams coming up 🎉</p>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>📚 Homework &amp; assignments</h2><button class="btn ghost small" id="addHw"><svg><use href="#i-plus"/></svg>Add</button></div>
+        <ul class="task-list" id="hwList"></ul>
+        <p class="empty small" id="hwEmpty">No open assignments ✓</p>
+        <button class="link-btn" id="hwDoneToggle" hidden></button>
+        <ul class="task-list" id="hwDone" hidden></ul>
+      </section>
+    </section>
+  </div>
+
+  <nav class="bar">
+    <a class="bar-btn" href="/"><svg><use href="#i-home"/></svg><span>Home</span></a>
+    <button class="fab" id="addBtn" aria-label="Add"><svg><use href="#i-plus"/></svg></button>
+    <a class="bar-btn" href="today.html"><svg><use href="#i-cal"/></svg><span>Schedule</span></a>
+  </nav>
+
+  <!-- CLASS FORM -->
+  <dialog class="sheet" id="classSheet">
+    <div class="handle"></div>
+    <div class="sheet-head"><h2 id="cHead">Add a lecture</h2><button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button></div>
+    <form id="classForm" autocomplete="off">
+      <label class="field"><span>Course</span><input type="text" id="cCourse" list="courseList" maxlength="80" placeholder="e.g. Calculus 1" required /></label>
+      <div class="field"><span>Type</span>
+        <div class="quick wrap" id="cKind">
+          <button type="button" class="q" data-v="Lecture">Lecture</button>
+          <button type="button" class="q" data-v="Practice">Practice</button>
+          <button type="button" class="q" data-v="Lab">Lab</button>
+          <button type="button" class="q" data-v="Seminar">Seminar</button>
+          <button type="button" class="q" data-v="Other">Other</button>
+        </div>
+      </div>
+      <div class="field"><span id="cDaysLabel">Day(s) · every week</span>
+        <div class="days-pick" id="cDays" data-multi>
+          <button type="button" data-v="0">S</button><button type="button" data-v="1">M</button><button type="button" data-v="2">T</button>
+          <button type="button" data-v="3">W</button><button type="button" data-v="4">T</button><button type="button" data-v="5">F</button>
+          <button type="button" data-v="6">S</button>
+        </div>
+      </div>
+      <div class="two">
+        <label class="field"><span>Start</span><input type="time" id="cStart" required /></label>
+        <label class="field"><span>End</span><input type="time" id="cEnd" required /></label>
+      </div>
+      <div class="two">
+        <label class="field"><span>Room</span><input type="text" id="cRoom" maxlength="60" placeholder="e.g. 204" /></label>
+        <label class="field"><span>Lecturer</span><input type="text" id="cLecturer" maxlength="60" placeholder="optional" /></label>
+      </div>
+      <div class="field"><span>Color</span><div class="swatches" id="cColor"></div></div>
+      <div class="clash-box" id="cClash" hidden></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn danger" id="cDelete" hidden><svg><use href="#i-trash"/></svg></button>
+        <button type="submit" class="btn primary big grow" id="cSave">Add lecture</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- SEMESTER -->
+  <dialog class="sheet" id="semSheet">
+    <div class="handle"></div>
+    <div class="sheet-head"><h2>Semester dates</h2><button class="icon-btn sm" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button></div>
+    <form id="semForm" class="stack">
+      <p class="muted small">Lectures only show in your schedule between these dates. Leave empty to always show them.</p>
+      <div class="two">
+        <label class="field"><span>Starts</span><input type="date" id="semStart" /></label>
+        <label class="field"><span>Ends</span><input type="date" id="semEnd" /></label>
+      </div>
+      <button class="btn primary big" type="submit">Save</button>
+    </form>
+  </dialog>
+
+  <script src="core.js"></script>
+  <script src="college.js"></script>
+</body>
+</html>

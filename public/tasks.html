@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Tasks</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="organizer.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="page-top">
+      <a class="icon-btn" href="/" aria-label="Home"><svg><use href="#i-home"/></svg></a>
+      <div class="page-title">
+        <h1>Tasks</h1>
+        <p class="muted small" id="taskSub"></p>
+      </div>
+      <span></span>
+    </header>
+
+    <section class="card progress-card">
+      <div class="prog-top">
+        <div><div class="muted small">Today</div><b id="progToday">0 / 0 done</b></div>
+        <div class="right"><div class="muted small">This week</div><b id="progWeek">0 completed</b></div>
+      </div>
+      <div class="prog-bar"><span id="progFill"></span></div>
+      <div class="prog-msg" id="progMsg"></div>
+    </section>
+
+    <div class="filters" id="filters">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="personal">🌿 Personal</button>
+      <button class="chip" data-f="college">🎓 College</button>
+      <button class="chip" data-f="work">💼 Work</button>
+    </div>
+
+    <div id="groups" class="stack"></div>
+
+    <div class="empty-day" id="tEmpty" hidden>
+      <div class="empty-emoji">✅</div>
+      <b>All clear</b>
+      <p class="muted small">Nothing to do here. Add a task with the + button.</p>
+    </div>
+
+    <button class="link-btn" id="doneToggle" hidden></button>
+    <ul class="task-list" id="doneList" hidden></ul>
+  </div>
+
+  <nav class="bar">
+    <a class="bar-btn" href="/"><svg><use href="#i-home"/></svg><span>Home</span></a>
+    <button class="fab" id="addBtn" aria-label="Add task"><svg><use href="#i-plus"/></svg></button>
+    <a class="bar-btn" href="today.html"><svg><use href="#i-cal"/></svg><span>Schedule</span></a>
+  </nav>
+
+  <script src="core.js"></script>
+  <script src="tasks.js"></script>
+</body>
+</html>
