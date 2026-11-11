@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="expenses.css" />
 </head>
 <body>
   <!-- SVG icons -->
@@ -78,7 +79,10 @@
           <h1 id="userName"></h1>
         </div>
       </div>
-      <button class="icon-btn" id="refreshBtn" aria-label="Refresh"><svg><use href="#i-refresh"/></svg></button>
+      <div class="top-btns">
+        <button class="ex-btn" id="expensesBtn" aria-label="Money in and out" title="Money in &amp; out"><span>💸</span><span class="ex-btn-label">Money</span></button>
+        <button class="icon-btn" id="refreshBtn" aria-label="Refresh"><svg><use href="#i-refresh"/></svg></button>
+      </div>
     </header>
 
     <div class="import-banner" id="importBanner" hidden>
@@ -333,5 +337,6 @@
   <canvas id="confetti"></canvas>
   <div class="toast" id="toast"></div>
   <script src="app.js"></script>
+  <script src="expenses.js"></script>
 </body>
 </html>

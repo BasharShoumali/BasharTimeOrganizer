@@ -185,6 +185,40 @@ function cleanEvent(b) {
   return { doc };
 }
 
+// money going out: fixed every month, or one time
+const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+const EXPENSE_CATS = ["home", "phone", "car", "food", "college", "subs", "health", "family", "loan", "other"];
+const INCOME_CATS = ["job", "family", "grant", "rent", "gov", "gift", "refund", "other"];
+// flow "out" = expense, flow "in" = other income (another job, family, scholarship…)
+function cleanExpense(b) {
+  const name = str(b?.name, 80);
+  if (!name) return { error: "Name is required" };
+  const amount = num(b.amount, 0.01);
+  if (amount === null) return { error: "Amount must be more than 0" };
+  const kind = b.kind === "once" ? "once" : "monthly";
+  const flow = b.flow === "in" ? "in" : "out";
+  const cats = flow === "in" ? INCOME_CATS : EXPENSE_CATS;
+  const doc = {
+    name, amount, kind, flow,
+    category: cats.includes(b.category) ? b.category : "other",
+    note: str(b.note, 200),
+  };
+  if (kind === "monthly") {
+    const day = Number(b.day);
+    if (!Number.isInteger(day) || day < 1 || day > 31) return { error: "Pick a day of the month (1–31)" };
+    if (!MONTH.test(b.from || "")) return { error: "Bad start month" };
+    if (b.until && !MONTH.test(b.until)) return { error: "Bad end month" };
+    if (b.until && b.until < b.from) return { error: "End month is before start month" };
+    doc.day = day; doc.from = b.from; doc.until = b.until || "";
+    doc.paid = Array.isArray(b.paid) ? [...new Set(b.paid.filter((m) => MONTH.test(m)))].slice(-120) : [];
+  } else {
+    if (!DATE.test(b.date || "")) return { error: "Bad date" };
+    doc.date = b.date;
+    doc.paid = !!b.paid;
+  }
+  return { doc };
+}
+
 function cleanTask(b) {
   const title = str(b?.title, 140);
   if (!title) return { error: "Task title is required" };
@@ -353,6 +387,8 @@ async function main() {
   crud("classes", Classes, cleanClass, { day: 1, start: 1 });
   crud("events", Events, cleanEvent, { date: 1, start: 1 });
   crud("tasks", Tasks, cleanTask, { done: 1, due: 1 });
+  const Expenses = db.collection("expenses");
+  crud("expenses", Expenses, cleanExpense, { kind: 1, day: 1, date: 1 });
 
   // semester dates (lectures only show between them, if set)
   api.get("/college", async (_req, res) => {
@@ -369,14 +405,14 @@ async function main() {
 
   // full backup of everything
   api.get("/export", async (_req, res) => {
-    const [entries, classes, events, tasks, settings, college] = await Promise.all([
+    const [entries, classes, events, tasks, expenses, settings, college] = await Promise.all([
       Entries.find().toArray(), Classes.find().toArray(), Events.find().toArray(), Tasks.find().toArray(),
-      Settings.findOne({ _id: "main" }), Settings.findOne({ _id: "college" }),
+      Expenses.find().toArray(), Settings.findOne({ _id: "main" }), Settings.findOne({ _id: "college" }),
     ]);
     res.setHeader("Content-Disposition", `attachment; filename="organizer-backup-${new Date().toISOString().slice(0, 10)}.json"`);
     res.json({
       exportedAt: new Date(), entries: entries.map(toClient), classes: classes.map(toClient),
-      events: events.map(toClient), tasks: tasks.map(toClient), settings, college,
+      events: events.map(toClient), tasks: tasks.map(toClient), expenses: expenses.map(toClient), settings, college,
     });
   });
 
