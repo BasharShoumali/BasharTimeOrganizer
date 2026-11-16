@@ -95,7 +95,7 @@ If you used the first (browser-only) version on a device, open the new site **in
 - If two things overlap you'll see **⚠ Clashes with…** while adding and in the timeline.
 - Tap a **Free** gap in the timeline to plan something in it.
 - **Work Hours:** **Start shift** runs a live timer; **Details** lists every day of the month; tap a day to edit it.
-- **Money in & out (💸 on the Work Hours page):** add **other income** (a side job, family, scholarship… fixed every month or one time) and **expenses** (rent, phone, gym… fixed or one time). See **Work + Other income − Expenses = Left** for each month, tap ○ to mark something received / paid, and use ‹ › to switch months. Deleting a monthly item in a later month only stops it from that month on.
+- **Money in & out (💸 on the Work Hours page):** add **other income** (a side job, family, scholarship… fixed every month or one time) and **expenses** (rent, phone, gym… fixed or one time). See **Work + Other income − Expenses = Left** for each month. **Work** here is the money that actually arrives that month: **PAID shifts of the month + bonuses of the month + UNPAID shifts of the month before** (this month's UNPAID shifts are shown as "comes next month"). The main Work Hours screen still counts everything you worked this month, as before. Swipe the **week strip** (or use ‹ › / Today) to see other weeks. Tap ○ to mark something received / paid, and use ‹ › to switch months. Deleting a monthly item in a later month only stops it from that month on.
 - **Menu (⚙ on home) → Download full backup** saves everything as one file.
 - In your phone browser's menu, tap **Add to Home Screen** to open it like an app.
 

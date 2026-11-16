@@ -464,29 +464,108 @@
     renderLast();
   }
 
+  // ================= weeks strip (swipe / arrows to move between weeks) =================
+  let weekOffset = 0;        // 0 = this week, -1 = last week, +1 = next week…
+  let weekFirst = 0;         // offset of the first page in the scroller
+  let weekCount = 0;
+  const WEEK_MS = 7 * 864e5;
+  const sundayOf = (d) => { const s = new Date(d); s.setHours(0, 0, 0, 0); s.setDate(s.getDate() - s.getDay()); return s; };
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const shortDate = (d) => d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+
   function renderWeek() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const sun = new Date(today); sun.setDate(today.getDate() - today.getDay()); // week starts Sunday
-    const strip = $("weekStrip"); strip.innerHTML = "";
-    let weekH = 0;
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(sun); d.setDate(sun.getDate() + i);
-      const ds = dateStr(d);
-      const dayEntries = entries.filter((e) => e.date === ds);
-      const h = dayEntries.reduce((s, e) => s + e.hours, 0);
-      weekH += h;
-      const b = document.createElement("button");
-      b.className = "wday" + (h ? " worked" : "") + (ds === todayStr() ? " today" : "") + (d > today ? " future" : "");
-      b.innerHTML = `<span class="wl">${d.toLocaleDateString(undefined, { weekday: "narrow" })}</span><span class="wd">${d.getDate()}</span><span class="wh">${h ? round2(h) + "h" : ""}</span>`;
-      b.onclick = () => {
-        if (dayEntries.length === 1) startEdit(dayEntries[0].id);
-        else if (dayEntries.length > 1) { viewMonth = firstOfMonth(d); render(); renderDays(); openSheet("daysSheet"); }
-        else { resetForm(ds); openSheet("addSheet"); }
-      };
-      strip.appendChild(b);
+    const thisSun = sundayOf(today);
+    // from your first logged day (at least 12 weeks back, at most ~3 years) up to 8 weeks ahead
+    const firstDate = entries.reduce((m, e) => (e.date < m ? e.date : m), todayStr());
+    const back = Math.round((thisSun - sundayOf(new Date(firstDate + "T00:00"))) / WEEK_MS);
+    weekFirst = -Math.min(156, Math.max(12, back));
+    const last = 8;
+    weekCount = last - weekFirst + 1;
+    weekOffset = Math.min(last, Math.max(weekFirst, weekOffset));
+
+    const byDate = {};
+    entries.forEach((e) => (byDate[e.date] = byDate[e.date] || []).push(e));
+    const viewMk = monthKey(viewMonth);
+    const scroller = $("weekScroller");
+    const frag = document.createDocumentFragment();
+    for (let w = weekFirst; w <= last; w++) {
+      const sun = addDays(thisSun, w * 7);
+      const page = document.createElement("div");
+      page.className = "week-page";
+      const strip = document.createElement("div");
+      strip.className = "week-strip";
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(sun, i), ds = dateStr(d);
+        const dayEntries = byDate[ds] || [];
+        const h = dayEntries.reduce((s, e) => s + e.hours, 0);
+        const b = document.createElement("button");
+        b.className = "wday" + (h ? " worked" : "") + (ds === todayStr() ? " today" : "") + (d > today ? " future" : "")
+          + (monthKey(d) !== viewMk ? " other-month" : "");
+        b.title = d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+        b.innerHTML = `<span class="wl">${d.toLocaleDateString(undefined, { weekday: "narrow" })}</span><span class="wd">${d.getDate()}</span><span class="wh">${h ? round2(h) + "h" : ""}</span>`;
+        b.onclick = () => {
+          if (dayEntries.length === 1) startEdit(dayEntries[0].id);
+          else if (dayEntries.length > 1) { viewMonth = firstOfMonth(d); render(); renderDays(); openSheet("daysSheet"); }
+          else { resetForm(ds); openSheet("addSheet"); }
+        };
+        strip.appendChild(b);
+      }
+      page.appendChild(strip);
+      frag.appendChild(page);
     }
-    $("weekHours").textContent = `${hrs(weekH)} this week`;
+    scroller.replaceChildren(frag);
+    jumpToWeek(weekOffset);
+    weekHeader();
   }
+
+  // header text for the week you're looking at
+  function weekHeader() {
+    const sun = addDays(sundayOf(new Date()), weekOffset * 7), sat = addDays(sun, 6);
+    let h = 0;
+    for (let i = 0; i < 7; i++) {
+      const ds = dateStr(addDays(sun, i));
+      entries.forEach((e) => { if (e.date === ds) h += e.hours; });
+    }
+    const range = `${shortDate(sun)} – ${shortDate(sat)}`;
+    const name = weekOffset === 0 ? "This week" : weekOffset === -1 ? "Last week" : weekOffset === 1 ? "Next week" : range;
+    $("weekTitle").textContent = name;
+    $("weekHours").textContent = name === range ? hrs(h) : `${hrs(h)} · ${range}`;
+    $("weekToday").hidden = weekOffset === 0;
+    $("weekPrev").disabled = weekOffset <= weekFirst;
+    $("weekNext").disabled = weekOffset >= weekFirst + weekCount - 1;
+  }
+
+  // jump without animation (after a re-render or when the box changes size)
+  function jumpToWeek(off) {
+    const sc = $("weekScroller"), w = sc.clientWidth;
+    if (!w) return;
+    sc.style.scrollBehavior = "auto";
+    sc.scrollLeft = (off - weekFirst) * w;
+    sc.style.scrollBehavior = "";
+  }
+  function goWeek(off) {
+    const sc = $("weekScroller");
+    off = Math.min(weekFirst + weekCount - 1, Math.max(weekFirst, off));
+    sc.scrollTo({ left: (off - weekFirst) * sc.clientWidth });
+    weekOffset = off; weekHeader();
+  }
+  $("weekPrev").onclick = () => goWeek(weekOffset - 1);
+  $("weekNext").onclick = () => goWeek(weekOffset + 1);
+  $("weekToday").onclick = () => goWeek(0);
+
+  let weekScrollT;
+  $("weekScroller").addEventListener("scroll", () => {
+    const sc = $("weekScroller"), w = sc.clientWidth; if (!w) return;
+    clearTimeout(weekScrollT);
+    weekScrollT = setTimeout(() => {
+      const off = weekFirst + Math.round(sc.scrollLeft / w);
+      if (off !== weekOffset) { weekOffset = off; weekHeader(); }
+    }, 60);
+  }, { passive: true });
+  // the strip is hidden while loading and changes width on rotate → keep the right week in view
+  if ("ResizeObserver" in window) new ResizeObserver(() => jumpToWeek(weekOffset)).observe($("weekScroller"));
+  else addEventListener("resize", () => jumpToWeek(weekOffset));
 
   function renderLast() {
     const last = [...entries].sort((a, b) => (b.date + b.start).localeCompare(a.date + a.start))[0];

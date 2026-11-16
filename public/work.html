@@ -169,10 +169,17 @@
     <!-- THIS WEEK -->
     <section class="week">
       <div class="week-head">
-        <h2>This week</h2>
-        <span class="muted small" id="weekHours">0 h</span>
+        <div class="week-title">
+          <h2 id="weekTitle">This week</h2>
+          <span class="muted small" id="weekHours">0 h</span>
+        </div>
+        <div class="week-nav">
+          <button class="week-today" id="weekToday" hidden>Today</button>
+          <button class="icon-btn sm" id="weekPrev" aria-label="Previous week"><svg><use href="#i-left"/></svg></button>
+          <button class="icon-btn sm" id="weekNext" aria-label="Next week"><svg><use href="#i-right"/></svg></button>
+        </div>
       </div>
-      <div class="week-strip" id="weekStrip"></div>
+      <div class="week-scroller" id="weekScroller"></div>
     </section>
 
     <!-- LAST SHIFT -->

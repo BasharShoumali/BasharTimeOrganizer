@@ -98,3 +98,34 @@
 .ex-income .ex-seg button.on { background: linear-gradient(135deg, rgba(52,211,153,.3), rgba(79,209,197,.2)); }
 .ex-income .ex-amount input { color: #6ee7b7; }
 .ex-income #exSave { background: linear-gradient(135deg, #059669, #34d399); box-shadow: 0 10px 26px rgba(52,211,153,.3); }
+
+/* ===== work income (PAID this month + bonus + last month's UNPAID) ===== */
+.ex-row.ex-work { grid-template-columns: 34px minmax(0, 1fr) auto; cursor: default; }
+.ex-row.ex-work .ex-amt { color: #6ee7b7; }
+.ex-row.ex-work .ex-emoji { background: rgba(52,211,153,.12); }
+.ex-row.ex-work.w-bonus .ex-emoji { background: rgba(251,191,36,.14); }
+.ex-row.ex-work.w-bonus .ex-amt { color: var(--gold); }
+.ex-row.ex-work.w-late .ex-emoji { background: rgba(96,165,250,.14); }
+.ex-row.ex-work.w-late .ex-amt { color: var(--in); }
+.ex-next { font-size: 12.5px; color: var(--muted); text-align: center; padding: 8px 10px; border-radius: 12px; background: rgba(96,165,250,.08); border: 1px dashed rgba(96,165,250,.35); }
+.ex-next b { color: var(--in); }
+.ex-next:empty { display: none; }
+
+/* responsive money sheet */
+.ex-row { grid-template-columns: 30px 34px minmax(0, 1fr) auto; }
+.ex-amt { white-space: nowrap; }
+.ex-nums > div { min-width: 0; }
+.ex-nums b { overflow-wrap: anywhere; }
+@media (min-width: 560px) {
+  .ex-nums { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 380px) {
+  .ex-summary { padding: 14px 12px; }
+  .ex-nums b { font-size: 17px; }
+  .ex-nums .ex-left b { font-size: 19px; }
+  .ex-row { gap: 8px; padding: 9px 10px; }
+  .ex-row.ex-work { grid-template-columns: 30px minmax(0, 1fr) auto; }
+  .ex-emoji { width: 30px; height: 30px; font-size: 16px; }
+  .ex-text b, .ex-amt { font-size: 14px; }
+  .ex-add-row .btn { padding-left: 8px; padding-right: 8px; }
+}
